@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+tee /etc/udev/rules.d/10-network-rename.rules <<-EOF
+	SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="1c:bf:ce:2b:41:24", NAME="eth0"
+EOF
+
+echo 'udev rules applied'
+echo 'restart the system for udev rules to take effect' >&2
