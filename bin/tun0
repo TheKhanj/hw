@@ -22,7 +22,7 @@ route() {
 		ip route | grep -P '(?<=default via )([^ ]*)' -o
 	)"
 
-	ip route | grep default >/tmp/tun0-old-gateway
+	echo -n "$old_gateway" >/tmp/tun0-old-gateway
 
 	ip route del default
 	ip route add default via 169.254.10.1
