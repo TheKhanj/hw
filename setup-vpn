@@ -68,8 +68,8 @@ main() {
 
 		[Service]
 		Type=oneshot
-		ExecStart=$PWD/bin/tun0 start
-		ExecStop=$PWD/bin/tun0 stop
+		ExecStart=/usr/bin/tun0 start
+		ExecStop=/usr/bin/tun0 stop
 		RemainAfterExit=true
 
 		[Install]
@@ -105,6 +105,8 @@ main() {
 
 	systemctl daemon-reload
 	systemctl enable --now tun2socks
+
+	install -m 766 bin/tun0 /usr/bin
 }
 
 main

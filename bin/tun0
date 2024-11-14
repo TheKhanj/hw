@@ -10,4 +10,38 @@ stop() {
 	ip tuntap del dev tun0 mode tun
 }
 
+route() {
+	[ -f /usr/bin/jq ] || apt install -y jq
+
+	local vpn_server_ip="$(
+		cat /etc/vpn/config.json |
+			jq '.outbounds[0].settings.vnext[0].address' -r
+	)"
+
+	local old_gateway="$(
+		ip route | grep -P '(?<=default via )([^ ]*)' -o
+	)"
+
+	ip route | grep default >/tmp/tun0-old-gateway
+
+	ip route del default
+	ip route add default via 169.254.10.1
+	ip route add ${vpn_server_ip}/32 via $old_gateway
+}
+
+unroute() {
+	[ -f /usr/bin/jq ] || apt install -y jq
+
+	local vpn_server_ip="$(
+		cat /etc/vpn/config.json |
+			jq '.outbounds[0].settings.vnext[0].address' -r
+	)"
+
+	local old_gateway="$(cat /tmp/tun0-old-gateway)"
+
+	ip route del default
+	ip route del ${vpn_server_ip}/32 via $old_gateway
+	ip route add default via $old_gateway
+}
+
 $1
