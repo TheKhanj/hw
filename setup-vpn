@@ -47,17 +47,17 @@ main() {
 	[ -f /etc/vpn/config.json ] || {
 		echo '/etc/vpn/config.json not found'
 		echo 'copy it from another device'
-		exit 1
+		return 1
 	}
 
 	[ -f /usr/bin/tun2socks ] || {
 		echo 'tun2socks is not installed'
-		install_tun2socks || exit
+		install_tun2socks || return
 	}
 
 	[ -f /usr/bin/xray ] || {
 		echo 'xray is not installed'
-		install_xray || exit
+		install_xray || return
 	}
 
 	cat >/etc/systemd/system/tun0.service <<-EOF
