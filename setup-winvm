@@ -1,0 +1,31 @@
+#!/usr/bin/env sh
+
+tee /etc/systemd/system/winvm.service >/dev/null <<-EOF
+	[Unit]
+	Description=WinVM Service
+	Requires=winvm-network.service
+
+	[Service]
+	WorkingDirectory=$PWD
+	ExecStart=./bin/winvm boot
+
+	[Install]
+	WantedBy=default.target
+EOF
+
+tee /etc/systemd/system/winvm-network.service >/dev/null <<-EOF
+	[Unit]
+	Description=WinVM Network Service
+
+	[Service]
+	Type=oneshot
+	WorkingDirectory=$PWD
+	ExecStart=./bin/winvm netup
+	ExecStop=./bin/winvm netdown
+	RemainAfterExit=true
+
+	[Install]
+	RequiredBy=grandpa.service
+EOF
+
+systemctl daemon-reload
