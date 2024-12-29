@@ -7,7 +7,7 @@ tee /etc/systemd/system/winvm.service >/dev/null <<-EOF
 
 	[Service]
 	WorkingDirectory=$PWD
-	ExecStart=./bin/winvm boot
+	ExecStart=$PWD/bin/winvm boot
 
 	[Install]
 	WantedBy=default.target
@@ -20,8 +20,8 @@ tee /etc/systemd/system/winvm-network.service >/dev/null <<-EOF
 	[Service]
 	Type=oneshot
 	WorkingDirectory=$PWD
-	ExecStart=./bin/winvm netup
-	ExecStop=./bin/winvm netdown
+	ExecStart=$PWD/bin/winvm netup
+	ExecStop=$PWD/bin/winvm netdown
 	RemainAfterExit=true
 
 	[Install]
