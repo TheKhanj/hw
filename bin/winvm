@@ -1,0 +1,48 @@
+#!/usr/bin/env sh
+
+create_disk() {
+	qemu-img create -f qcow2 windows7/disk.qcow2 50G
+}
+
+install_windows() {
+	qemu-system-x86_64 \
+		-cpu host \
+		-smp 3 \
+		-m 3072 \
+		-boot d \
+		-hda ./windows-server/disk.qcow2 \
+		-cdrom /mnt/purple/os/windows-server-2025/Windows.Server.2025.LTSC.24H2.Build.26100.2605.VL/SW_DVD9_Win_Server_STD_CORE_2025_24H2.2_64Bit_English_DC_STD_MLF_X23-91027.iso \
+		-accel kvm \
+		-vnc 0.0.0.0:2 \
+		-usb \
+		-device usb-mouse -device usb-tablet -device usb-kbd
+}
+
+boot() {
+	qemu-system-x86_64 \
+		-cpu host \
+		-smp 5 \
+		-m 8192 \
+		-boot d \
+		-hda ./disk.qcow2 \
+		-accel kvm \
+		-vnc 0.0.0.0:2 \
+		-usb \
+		-device usb-mouse -device usb-tablet -device usb-kbd \
+		-device e1000,netdev=net0,mac=00:00:00:00:00:02 \
+		-netdev tap,id=net0,ifname=tap1,script=no,downscript=no \
+		-vga qxl
+}
+
+netup() {
+	ip tuntap add name tap1 mode tap
+	ip link set dev tap1 up
+	ip link set dev tap1 master br0
+	sleep 1
+}
+
+netdown() {
+	ip tuntap del name tap1 mode tap
+}
+
+$@
