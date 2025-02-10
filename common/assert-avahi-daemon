@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+dpkg -L avahi-daemon 2>&1 >/dev/null && {
+	echo 'avahi daemon already installed'
+	exit 0
+}
+
+echo 'installing avahi daemon'
+apt install -y avahi-daemon &&
+	systemctl enable --now avahi-daemon
+
+echo 'avahi daemon installed'

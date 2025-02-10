@@ -1,0 +1,43 @@
+#!/usr/bin/env sh
+
+help() {
+	echo 'Usage: setup-br0 {IP_ADDRESS} [GATEWAY] [DNS]'
+}
+
+ip="$1"
+gateway="${2:-$(echo "$ip" | rev | sed 's/^[0-9]*/1/' | rev)}"
+dns="${3:-1.1.1.1}"
+
+[ -z "$ip" ] && {
+	help
+	exit 1
+}
+
+dir=/etc/systemd/network
+
+cat >"$dir/10-br0.network" <<-EOF
+	[Match]
+	Name=br0
+
+	[Network]
+	Address=$ip/24
+	Gateway=$gateway
+	DNS=$dns
+EOF
+
+cat >"$dir/10-eth0.network" <<-EOF
+	[Match]
+	Name=eth0
+
+	[Network]
+	Bridge=br0
+EOF
+
+cat >"$dir/br0.netdev" <<-EOF
+	[NetDev]
+	Name=br0
+	Kind=bridge
+EOF
+
+systemctl daemon-reload
+systemctl enable --now systemd-networkd
