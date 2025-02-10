@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+help() {
+	echo 'Usage: setup-eth0-udev-rules {MAC_ADDRESS}'
+}
+
+mac="$1"
+
+[ -z "$mac" ] && {
+	help
+	exit 1
+}
+
+tee /etc/udev/rules.d/10-network-rename.rules <<-EOF
+	SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="$mac", NAME="eth0"
+EOF
+
+echo 'udev rules applied'
+echo 'restart the system for udev rules to take effect' >&2

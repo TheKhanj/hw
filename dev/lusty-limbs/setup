@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+./common/setup-eth0-udev-rules "1c:bf:ce:2b:41:24"
