@@ -6,4 +6,16 @@ setup_network() {
 	./common/setup-br0 "192.168.40.202"
 }
 
+setup_nas() {
+	apt install -y nfs-kernel-server rpcbind
+	perl -pi -e 's/^OPTIONS/#OPTIONS/' /etc/default/rpcbind
+	echo "rpcbind: 192.168.40." >>/etc/hosts.allow
+	systemctl restart rpcbind.service
+
+	echo "/example 192.168.40.0/255.255.255.0(rw,no_root_squash,subtree_check)" >>/etc/exports
+	exportfs -a
+	/etc/init.d/nfs-kernel-server reload
+}
+
 setup_network
+setup_nas
