@@ -19,6 +19,8 @@ install_windows() {
 }
 
 boot() {
+	mkdir -p /var/run/winvm
+
 	qemu-system-x86_64 \
 		-cpu host \
 		-smp 5 \
@@ -27,6 +29,7 @@ boot() {
 		-hda ./disk.qcow2 \
 		-accel kvm \
 		-spice port=5902,addr=0.0.0.0,disable-ticketing=on \
+		-serial unix:/var/run/winvm/serial,server,nowait \
 		-usb \
 		-device usb-mouse -device usb-tablet -device usb-kbd \
 		-device e1000,netdev=net0,mac=00:00:00:00:00:02 \
