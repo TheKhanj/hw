@@ -27,7 +27,7 @@ boot() {
 		-hda ./disk.qcow2 \
 		-accel kvm \
 		-spice port=5902,addr=0.0.0.0,disable-ticketing=on \
-		-serial telnet:6000,server=on,wait=on \
+		-monitor telnet:0.0.0.0:6000,server=on,wait=on \
 		-usb \
 		-device usb-mouse -device usb-tablet -device usb-kbd \
 		-device e1000,netdev=net0,mac=00:00:00:00:00:02 \
