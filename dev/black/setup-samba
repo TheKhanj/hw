@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+
+sudo pacman -S samba
+
+sudo tee /etc/samba/smb.conf >/dev/null <<-EOF
+	[global]
+	  workgroup = WORKGROUP
+	  browsable = yes
+	  server string = Samba Server
+	  server role = standalone server
+	  acl allow execute always = True
+
+	[bmw]
+	  comment = BMW Share
+	  path = /mnt/purple/bmw
+	  public = yes
+	  browsable = yes
+	  writable = yes
+	  read only = no
+	  guest ok = yes
+	  printable = no
+	  create mask = 0774
+	  force create mode = 0774
+	  directory mask = 0775
+	  force directory mode = 0775
+EOF
+
+sudo smbpasswd -a bmw
+
+sudo systemctl enable --now smb
