@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+./common/setup-eth0-udev-rules "f8:32:e4:9c:78:f7"
+./common/assert-avahi-daemon
+./common/setup-br0 "192.168.40.206"
