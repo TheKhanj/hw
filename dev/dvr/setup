@@ -12,7 +12,7 @@ setup_nas() {
 	echo "rpcbind: 192.168.40." >>/etc/hosts.allow
 	systemctl restart rpcbind.service
 
-	echo "/example 192.168.40.0/255.255.255.0(rw,no_root_squash,subtree_check)" >>/etc/exports
+	echo "/mnt/dvr 192.168.40.0/255.255.255.0(rw,no_root_squash,subtree_check)" >>/etc/exports
 	exportfs -a
 	/etc/init.d/nfs-kernel-server reload
 }
