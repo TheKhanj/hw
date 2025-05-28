@@ -4,15 +4,16 @@ sudo pacman -S samba
 
 sudo tee /etc/samba/smb.conf >/dev/null <<-EOF
 	[global]
+	  netbios name = black
 	  workgroup = WORKGROUP
 	  browsable = yes
 	  server string = Samba Server
 	  server role = standalone server
 	  acl allow execute always = True
-
-	[bmw]
-	  comment = BMW Share
-	  path = /mnt/purple/bmw
+	
+	[purple]
+	  comment = Purple SMB Share
+	  path = /mnt/purple/smb
 	  public = yes
 	  browsable = yes
 	  writable = yes
