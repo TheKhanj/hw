@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+setup_network() {
+	./common/setup-eth0-udev-rules "b8:70:f4:cd:96:5b"
+	cat >/etc/network/interfaces <<-EOF
+		source /etc/network/interfaces.d/*
+
+		auto lo
+		iface lo inet loopback
+
+		auto eth0
+		iface eth0 inet static
+		    address 192.168.1.133
+		    netmask 255.255.255.0
+		    gateway 192.168.1.1
+		    dns-nameservers 1.1.1.1 8.8.8.8
+	EOF
+
+	systemctl enable --now ifupdown
+}
+
+setup_network
