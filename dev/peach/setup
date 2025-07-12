@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+setup_network() {
+	./common/setup-eth0-udev-rules "3c:97:0e:23:9e:d5"
+}
+
+setup_network
